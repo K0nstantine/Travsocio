@@ -120,6 +120,21 @@
     }*/
   </style>
     <title>Travsocio</title>
+    	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+	<script type="text/javascript">
+	function check_location () {
+		var geocoder = new google.maps.Geocoder ();
+		var address = document.getElementById("input-place").value;
+		geocoder.geocode( { 'address': address}, function(check_results, check_status) {
+			if (check_status == google.maps.GeocoderStatus.OK) {
+				alert ('cool')
+				//place your code instead of "alert ('cool')"
+    			} else {
+      				alert('Requested location could not be found for the following reason: ' + check_status);
+    			}
+  		});
+	}
+	</script>
 </head>
 <body>
     <script src="/javascripts/travsocio.js"></script>
@@ -194,7 +209,7 @@ location_array = input_string.split(/;/)
                     <option>Movie Theatre</option>
                     <option>Museums</option>
                 </select>
-                <input type="button" id="button-find" value="Find"/>
+                <input type="button" id="button-find" value="Find" onclick = "check_location()"/>
             </div>
             <div id="header-content">
                 <div id="fb-image">
