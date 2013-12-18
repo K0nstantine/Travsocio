@@ -138,38 +138,48 @@
     </script>
     <script type="text/javascript">
       function initialize () {
-var input_string = "{{ markers }}"
-var location_name_array = []
-var location_lat_array = []
-var location_lng_array = []
-location_array = input_string.split(/;/)
+	var input_string = "{{ markers }}"
+	var location_name_array = []
+	var location_lat_array = []
+	var location_lng_array = []
+	var bounds = new google.maps.LatLngBounds();
+	var you_infowindow = new google.maps.InfoWindow();
+	location_array = input_string.split(/;/)
 	for (i = 0; i < location_array.length-1; i++) {
-        //(location_array.length-1) instead of 5
 		tmp_name_and_location = location_array[i].split(/:/)
 		location_name_array[i] = tmp_name_and_location[0]
 		tmp_lat_and_long = tmp_name_and_location[1].split(/\,/)
 		location_lat_array [i] = tmp_lat_and_long[0]
 		location_lng_array [i] = tmp_lat_and_long[1]
 		}
-	var my_lat_lng = new google.maps.LatLng (parseFloat (location_lat_array [0]), parseFloat (location_lng_array [0]))
+	var location_lat_lng = new google.maps.LatLng (location_lat_array[0], location_lng_array[0])
+	bounds.extend(location_lat_lng)
 	var mapOptions = {
-        center: my_lat_lng,
-        zoom: 11
-    };
+        	center: location_lat_lng,
+		zoom: 11
+    	};
 	map = new google.maps.Map(document.getElementById("map-canvas"),
-        mapOptions)
-	for (i = 0; i < location_array.length; i++)	{
-
+        mapOptions);
+	var you_marker = new google.maps.Marker ({
+		position: location_lat_lng,
+		map: map,
+		title: location_name_array[0]
+	});	
+	you_infowindow.setContent ('You')
+	you_infowindow.open (map, you_marker)		
+    for (i = 1; i < location_array.length-1; i++)	{
 		var place_lat_lng = new google.maps.LatLng (parseFloat(location_lat_array[i]), parseFloat(location_lng_array[i]))
+		bounds.extend(place_lat_lng)
 		var marker = new google.maps.Marker ({
 			position: place_lat_lng,
 			map: map,
 			title: location_name_array[i]
 		});
 	}
+	map.fitBounds(bounds)
 }
-      google.maps.event.addDomListener(window, 'load', initialize);
-    </script>
+google.maps.event.addDomListener(window, 'load', initialize);
+</script>
     <script type="text/javascript" src = "javascripts/map_manipulation.js/"></script>
     <div id="container">
         <div id="header">
